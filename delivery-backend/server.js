@@ -52,7 +52,7 @@ const corsOptions = {
       return callback(null, origin);
     }
     
-    return callback(new Error('Not allowed by CORS'));
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -62,6 +62,7 @@ const corsOptions = {
 console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY);
 
 // Middleware
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json());
 
