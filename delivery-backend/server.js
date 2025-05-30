@@ -13,14 +13,33 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Enhanced CORS configuration
+// const corsOptions = {
+//   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true,
+//   optionsSuccessStatus: 200
+  
+
+// };
+const allowedOrigins = [
+  'https://taap-man-frontend.vercel.app', // ✅ Vercel frontend
+  'http://localhost:3000',                // for local dev
+  'http://localhost:19006',               // for Expo Go (React Native dev)
+  'exp://192.168.0.X:19000',              // optional mobile IP (Expo physical device)
+];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
-  
-
 };
 console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY);
 
